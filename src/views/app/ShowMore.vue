@@ -15,7 +15,7 @@
 
 </div>
 <div>
-    <v-btn color="black mt-3 mb-3 text-none" @click="openDialog">+ Add comments</v-btn>
+    <v-btn v-if="isLoggedIn" color="black mt-3 mb-3 text-none" @click="openDialog">+ Add comments</v-btn>
     <CreateComment :itemId="itemId" :dialogVisible="dialogVisible" @close-dialog="closeDialog"></CreateComment>
 
 </div>
@@ -38,6 +38,7 @@ import PageSnackbar from '@/components/PageSnackbar.vue';
 export default {
     data() {
         return {
+            isLoggedIn: localStorage.getItem('access') ? 1 : 0,
             snackbarVisible: false,
             isGreen:true,
             snackbarMessage: '',
@@ -104,32 +105,37 @@ export default {
         },
 
         fetchItem(itemId) {
-            let url = `${base_url}/blog/blog/${itemId}/`;
-            const token = localStorage.getItem('access');
-            const userToken = `Bearer ${token}`;
+    let url = `${base_url}/blog/blog/${itemId}/`;
+    const token = localStorage.getItem('access');
+    const headers = {
+        'Content-Type': 'application/json'
+    };
 
-            fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': userToken
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success && data.data) {
-                        this.item = {
-                            title: data.data.title,
-                            body: data.data.body,
-                            created_date: data.data.created_date,
-                            created_time: data.data.created_time,
-                            creator: data.data.author,
-                            is_author: data.data.is_author
-                        };
-                    }
-                })
-                .catch(error => console.log(error));
-        },
+    // Check if token exists in local storage
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    fetch(url, {
+            method: 'GET',
+            headers: headers
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.data) {
+                this.item = {
+                    title: data.data.title,
+                    body: data.data.body,
+                    created_date: data.data.created_date,
+                    created_time: data.data.created_time,
+                    creator: data.data.author,
+                    is_author: data.data.is_author
+                };
+            }
+        })
+        .catch(error => console.log(error));
+},
+
 
     },
 };
