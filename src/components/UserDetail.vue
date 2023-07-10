@@ -11,7 +11,7 @@
         </template>
 
         <v-list bg-color="#808080" class="text-white mt-5">
-            <v-list-item style="width: 145px; ">
+            <v-list-item style="min-width: 145px; ">
                 <div class="text-center">
                     <v-avatar size="55" class="px4">
                         <v-icon color="white">mdi-account</v-icon>

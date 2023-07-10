@@ -1,22 +1,18 @@
 <template>
 <v-card v-for="item in itemList" :key="item.id" color="grey" class="ma-auto mt-5 d-flex" max-width="95vw" min-height="30vh">
-        <div>
-            <h1 class="ml-5">{{ item.title }}</h1>
-            <p class="ml-5">{{ truncateText(item.body, 600) }}</p>
-        </div>
-        <v-spacer></v-spacer>
-        <v-card-actions class="mt-auto">
-            <v-btn @click="navigateToPage(item.id)" class="text-none  text-start bg-black ml-6" dark align-start> See More </v-btn>
-        </v-card-actions>
-    </v-card>
+    <div>
+        <h1 class="ml-5">{{ item.title }}</h1>
+        <p class="ml-5">{{ truncateText(item.body, 600) }}</p>
+    </div>
+    <v-spacer></v-spacer>
+    <v-card-actions class="mt-auto">
+        <v-btn @click="navigateToPage(item.id)" class="text-none  text-start bg-black ml-6" dark align-start> See More </v-btn>
+    </v-card-actions>
+</v-card>
 
-
-
-    <div ref="bottomMarker" style="height: 5vh; background-color: inherit;"></div>
+<div ref="bottomMarker" style="height: 5vh; background-color: inherit;"></div>
 </template>
 
-  
-  
 <script>
 import {
     base_url
@@ -25,6 +21,7 @@ import {
 export default {
     data() {
         return {
+
             itemList: [],
             currentPage: 1,
             totalPages: null,
@@ -34,11 +31,20 @@ export default {
     mounted() {
         this.fetchData();
         window.addEventListener('scroll', this.handleScroll);
+        
     },
     beforeUnmount() {
         window.removeEventListener('scroll', this.handleScroll);
     },
     methods: {
+        reloadsiblingb() {
+            alert("function passed")
+            this.itemList= [],
+            this.currentPage= 1,
+            this.totalPages= null,
+            this.nextPageUrl= null,
+            this.fetchData()
+        },
         truncateText(text, maxLength) {
             // Remove HTML tags from text
             const strippedText = text.replace(/(<([^>]+)>)/gi, '');
@@ -51,23 +57,25 @@ export default {
         },
 
         navigateToPage(itemId) {
-  this.$router.push({
-    path: 'blog/ShowMore',
-    query: { id: itemId }
-  });
-},
+            this.$router.push({
+                path: 'blog/ShowMore',
+                query: {
+                    id: itemId
+                }
+            });
+        },
 
         fetchData() {
             let limit = 2; // Number of items to fetch per request
             let url = `${base_url}/blog/list/?limit=${limit}&page=${this.currentPage}`;
 
             fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
 
-                }
-            })
+                    }
+                })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success && data.data.results && data.data.results.length) { // Check if results is not null or empty
@@ -96,8 +104,7 @@ export default {
     },
 };
 </script>
-  
-  
+
 <style scoped>
 
 </style>

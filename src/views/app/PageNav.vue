@@ -48,11 +48,19 @@ export default {
         };
     },
     methods: {
+        reloadSiblingB() {
+            alert("now emitting")
+      this.$emit('reloadsiblingb');
+
+    },
         openDialog() {
             this.dialogVisible = true;
         },
         closeDialog() {
             this.dialogVisible = false;
+
+            this.reloadSiblingB()
+            
         },
     },
     props: {

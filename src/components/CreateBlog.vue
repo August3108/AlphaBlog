@@ -99,6 +99,7 @@ export default {
             this.snackbarVisible = false;
             this.snackbarMessage = '';
             this.isGreen=true;
+            window.location.reload();
         },
 
         async createPost() {

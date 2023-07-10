@@ -21,7 +21,8 @@
 </div>
 
 <div>
-    <ShowComment :itemId="itemId" />
+    
+    <ShowComment :itemId="itemId"   :blogCreator="item ? item.is_author : null"/>
 </div>
 <PageSnackbar :isGreen="isGreen" v-if="snackbarVisible" :location="'top'" :message="snackbarMessage" :timeout="5000" @close-snackbar="closeSnackbar" />
 
@@ -76,6 +77,7 @@ export default {
         },
         closeDialog() {
             this.dialogVisible = false;
+            
         },
 
         async deleteBlog() {
