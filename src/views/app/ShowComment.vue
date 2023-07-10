@@ -8,6 +8,7 @@
 
     </div>
     <v-spacer></v-spacer>
+    <v-btn v-if="comment.is_edit" variant="plain"  append-icon="mdi-comment-edit-outline"></v-btn>
     <v-btn variant v-if="blogCreator" color="red" append-icon="mdi-delete" @click="deleteComment(comment.id)"></v-btn>
 
 </v-card>
@@ -16,8 +17,6 @@
 <br /><br /><br />
 </template>
 
-  
-  
 <script>
 import {
     base_url
@@ -47,17 +46,19 @@ export default {
     methods: {
 
         fetchComments() {
-
             let records = 5; // Number of comments to fetch per request
-            let blogID = this.itemId; // ID of the blog for which comments are fetched'
+            let blogID = this.itemId; // ID of the blog for which comments are fetched
             let url = `${base_url}/blog/comments/${blogID}?page=${this.currentPage}`;
+            const token = localStorage.getItem('access');
+            const userToken = `Bearer ${token}`;
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': userToken
+            };
 
             fetch(url, {
                     method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        // 'Authorization': 'Bearer 9aa4c32366ff4b728a5650636483d4e946'
-                    }
+                    headers: headers,
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -72,6 +73,7 @@ export default {
                 })
                 .catch(error => console.log(error));
         },
+
         handleScroll() {
             const bottomMarker = this.$refs.bottomMarker;
             const rect = bottomMarker.getBoundingClientRect();
@@ -90,8 +92,6 @@ export default {
 
         async deleteComment(commentId) {
             const url = `${base_url}blog/comment/delete/${commentId}/`;
-            alert(commentId);
-            // /blog/comment/delete/{blogID}/
             const token = localStorage.getItem('access');
             const userToken = `Bearer ${token}`;
             const headers = {
@@ -106,10 +106,10 @@ export default {
                 });
 
                 const data = await response.json();
-                    this.commentList= [],
-                    this.currentPage= 1
-                    this.totalPages= null,
-                    this.nextUrl= null,
+                this.commentList = [],
+                    this.currentPage = 1
+                this.totalPages = null,
+                    this.nextUrl = null,
                     this.fetchComments(),
                     console.log(data);
 
@@ -121,8 +121,7 @@ export default {
     },
 };
 </script>
-  
-  
+
 <style scoped>
   
   </style>
